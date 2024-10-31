@@ -4,31 +4,71 @@ import { Text } from 'src/ui/text';
 
 import clsx from 'clsx';
 import styles from './ArticleParamsForm.module.scss';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
+import {
+	ArticleStateType,
+	fontFamilyOptions,
+} from 'src/constants/articleProps';
+import { Select } from 'src/ui/select/Select';
+import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
 
-export const ArticleParamsForm = () => {
-	const [open, setOpen] = useState<boolean>(false);
+type ArticleParamsFormProps = {
+	currentArticle: ArticleStateType;
+	setCurrentArticle: (article: ArticleStateType) => void;
+};
 
-	const handleOpenForm = () => {
-		setOpen((prevOpen) => !prevOpen);
+export const ArticleParamsForm = ({
+	currentArticle,
+	setCurrentArticle,
+}: ArticleParamsFormProps) => {
+	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const rootRef = useRef<HTMLDivElement>(null);
+	const [selectArticleData, setSelectArticleData] = useState(currentArticle);
+
+	const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		setCurrentArticle({
+			...selectArticleData,
+		});
 	};
 
-	const modalStyle = clsx(styles.container, { [styles.container_open]: open });
+	useOutsideClickClose({
+		isOpen,
+		rootRef,
+		onClose: () => setIsOpen(!isOpen),
+		onChange: setIsOpen,
+	});
 
 	return (
-		<>
-			<ArrowButton isOpen={true} onClick={handleOpenForm} />
-			<aside className={modalStyle}>
-				<form className={styles.form}>
-					<Text as='h1' size={45} weight={800} uppercase dynamicLite>
+		<div ref={rootRef}>
+			<ArrowButton
+				isOpen={isOpen}
+				onClick={() => {
+					setIsOpen(!isOpen);
+				}}
+			/>
+			<aside
+				className={clsx(styles.container, isOpen && styles.container_open)}>
+				<form className={styles.form} onSubmit={handleFormSubmit}>
+					<Text as='h1' size={45} weight={800} uppercase>
 						задайте параметры
 					</Text>
+					<Select
+						options={fontFamilyOptions}
+						selected={selectArticleData.fontFamilyOption}
+						onChange={(data) =>
+							setSelectArticleData({
+								...selectArticleData,
+								fontFamilyOption: data,
+							})
+						}
+					/>
 					<div className={styles.bottomContainer}>
 						<Button title='Сбросить' htmlType='reset' type='clear' />
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>
 			</aside>
-		</>
+		</div>
 	);
 };
