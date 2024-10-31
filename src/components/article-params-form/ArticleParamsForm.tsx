@@ -7,10 +7,16 @@ import styles from './ArticleParamsForm.module.scss';
 import { useRef, useState } from 'react';
 import {
 	ArticleStateType,
+	backgroundColors,
+	contentWidthArr,
+	fontColors,
 	fontFamilyOptions,
+	fontSizeOptions,
 } from 'src/constants/articleProps';
 import { Select } from 'src/ui/select/Select';
 import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
+import { RadioGroup } from 'src/ui/radio-group/RadioGroup';
+import { Separator } from 'src/ui/separator/Separator';
 
 type ArticleParamsFormProps = {
 	currentArticle: ArticleStateType;
@@ -54,12 +60,59 @@ export const ArticleParamsForm = ({
 						задайте параметры
 					</Text>
 					<Select
+						title='шрифт'
 						options={fontFamilyOptions}
 						selected={selectArticleData.fontFamilyOption}
 						onChange={(data) =>
 							setSelectArticleData({
 								...selectArticleData,
 								fontFamilyOption: data,
+							})
+						}
+					/>
+					<RadioGroup
+						options={fontSizeOptions}
+						selected={selectArticleData.fontSizeOption}
+						title='размер шрифта'
+						name='radio'
+						onChange={(data) =>
+							setSelectArticleData({
+								...selectArticleData,
+								fontSizeOption: data,
+							})
+						}
+					/>
+					<Select
+						title='цвет шрифта'
+						options={fontColors}
+						selected={selectArticleData.fontColor}
+						onChange={(data) =>
+							setSelectArticleData({
+								...selectArticleData,
+								fontColor: data,
+							})
+						}
+					/>
+					<Separator />
+					<Select
+						title='цвет фона'
+						options={backgroundColors}
+						selected={selectArticleData.backgroundColor}
+						onChange={(data) =>
+							setSelectArticleData({
+								...selectArticleData,
+								backgroundColor: data,
+							})
+						}
+					/>
+					<Select
+						title='ширина контента'
+						options={contentWidthArr}
+						selected={selectArticleData.contentWidth}
+						onChange={(data) =>
+							setSelectArticleData({
+								...selectArticleData,
+								contentWidth: data,
 							})
 						}
 					/>
