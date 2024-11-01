@@ -9,6 +9,7 @@ import {
 	ArticleStateType,
 	backgroundColors,
 	contentWidthArr,
+	defaultArticleState,
 	fontColors,
 	fontFamilyOptions,
 	fontSizeOptions,
@@ -38,6 +39,11 @@ export const ArticleParamsForm = ({
 		});
 	};
 
+	const handleFormReset = () => {
+		setCurrentArticle({ ...defaultArticleState });
+		setSelectArticleData({ ...defaultArticleState });
+	};
+
 	useOutsideClickClose({
 		isOpen,
 		rootRef,
@@ -55,8 +61,12 @@ export const ArticleParamsForm = ({
 			/>
 			<aside
 				className={clsx(styles.container, isOpen && styles.container_open)}>
-				<form className={styles.form} onSubmit={handleFormSubmit}>
-					<Text as='h1' size={45} weight={800} uppercase>
+				<form
+					style={{ gap: 38 }}
+					className={styles.form}
+					onSubmit={handleFormSubmit}
+					onReset={handleFormReset}>
+					<Text as='h2' size={45} weight={800} uppercase>
 						задайте параметры
 					</Text>
 					<Select
@@ -70,6 +80,7 @@ export const ArticleParamsForm = ({
 							})
 						}
 					/>
+					<> </>
 					<RadioGroup
 						options={fontSizeOptions}
 						selected={selectArticleData.fontSizeOption}
