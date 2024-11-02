@@ -28,7 +28,7 @@ export const ArticleParamsForm = ({
 	currentArticle,
 	setCurrentArticle,
 }: ArticleParamsFormProps) => {
-	const [isOpen, setIsOpen] = useState<boolean>(false);
+	const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 	const rootRef = useRef<HTMLDivElement>(null);
 	const [selectArticleData, setSelectArticleData] = useState(currentArticle);
 
@@ -39,30 +39,31 @@ export const ArticleParamsForm = ({
 		});
 	};
 
-	const handleFormReset = () => {
+	const handleFormReset = (e: React.FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
 		setCurrentArticle({ ...defaultArticleState });
 		setSelectArticleData({ ...defaultArticleState });
 	};
 
 	useOutsideClickClose({
-		isOpen,
+		isOpen: isMenuOpen,
 		rootRef,
-		onClose: () => setIsOpen(!isOpen),
-		onChange: setIsOpen,
+		onClose: () => setIsMenuOpen(!isMenuOpen),
+		onChange: setIsMenuOpen,
 	});
 
 	return (
 		<div ref={rootRef}>
 			<ArrowButton
-				isOpen={isOpen}
+				isOpen={isMenuOpen}
 				onClick={() => {
-					setIsOpen(!isOpen);
+					setIsMenuOpen(!isMenuOpen);
 				}}
 			/>
 			<aside
-				className={clsx(styles.container, isOpen && styles.container_open)}>
+				className={clsx(styles.container, isMenuOpen && styles.container_open)}>
 				<form
-					style={{ gap: 38 }}
+					style={{ justifyContent: 'space-between' }}
 					className={styles.form}
 					onSubmit={handleFormSubmit}
 					onReset={handleFormReset}>
@@ -127,7 +128,9 @@ export const ArticleParamsForm = ({
 							})
 						}
 					/>
-					<div className={styles.bottomContainer}>
+					<div
+						style={{ margin: 0, marginTop: 207 }}
+						className={styles.bottomContainer}>
 						<Button title='Сбросить' htmlType='reset' type='clear' />
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
